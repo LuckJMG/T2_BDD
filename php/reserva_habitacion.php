@@ -100,22 +100,14 @@
             if ($result->num_rows > 0) {
                 // output data of each row
                 $row = $result->fetch_assoc();
-                $numero_habitacion_reservada = $row["numero_habitacion"];
-                if ($numero_habitacion_reservada == $numero_habitacion) {
-                    $sql = "UPDATE ReservaHabitacion SET fecha_checkin = '$fecha_ingreso', fecha_checkout = '$fecha_salida' WHERE rut_cliente = $rut_cliente";
-                    if ($conn->query($sql) === TRUE) {
-                    echo "Reserva modificada";
-                    } else {echo "Error: " . $sql . "<br>" . $conn->error;}
-                }else{
-                    $sql_delete_reservas = "DELETE FROM ReservaHabitacion WHERE rut_cliente = $rut_cliente";
-                    if ($conn->query($sql_delete_reservas) === TRUE) {
-                        $sql2 = "INSERT INTO ReservaHabitacion (rut_cliente, numero_habitacion, fecha_checkin, fecha_checkout) VALUES ($rut_cliente, $numero_habitacion, '$fecha_ingreso', '$fecha_salida')";
-                        if ($conn->query($sql2) === TRUE) {
-                            echo "Reserva modificada";
-                        } else {echo "Error: " . $sql2 . "<br>" . $conn->error;}
-                    }
-                }
-            }
+				$sql = "UPDATE ReservaHabitacion SET numero_habitacion = $numero_habitacion, fecha_checkin = '$fecha_ingreso', fecha_checkout = '$fecha_salida' WHERE rut_cliente = $rut_cliente";
+				if ($conn->query($sql) === TRUE) {
+				echo "Reserva modificada";
+				} else {echo "Error: " . $sql . "<br>" . $conn->error;}
+			}
+			else {
+				echo "Cliente no encontrado";
+			}
         }
         $conn->close();
         ?>
@@ -134,26 +126,13 @@
         $conn = coneccion();
         if(isset($_POST["numero_habitacion1"])){
             $numero_habitacion = $_POST["numero_habitacion1"];
-            
-            // Obtener el rut del cliente
-            $sql_rut = "SELECT rut_cliente FROM ReservaHabitacion WHERE numero_habitacion = $numero_habitacion";
-            $result_rut = $conn->query($sql_rut);
-        
-            if ($result_rut->num_rows > 0) {
-                // Obtener el valor del rut del cliente
-                $row_rut = $result_rut->fetch_assoc();
-                $rut_cliente = $row_rut["rut_cliente"];
-        
-                // Eliminar reservas asociadas al cliente
-                $sql_delete_reservas = "DELETE FROM ReservaHabitacion WHERE numero_habitacion = $numero_habitacion";
-                if ($conn->query($sql_delete_reservas) === TRUE) {
-                    // Eliminar cliente después de eliminar las reservas
-                    $sql_delete_cliente = "DELETE FROM Cliente WHERE rut = $rut_cliente";
-                    if ($conn->query($sql_delete_cliente) === TRUE) {
-                        echo "Cliente eliminado y reservas canceladas";
-                    } else {echo "Error al eliminar cliente: " . $conn->error;}
-                } else {echo "Error al cancelar reservas: " . $conn->error;}
-            }
+
+            $sql_delete_reservas = "DELETE FROM ReservaHabitacion WHERE numero_habitacion = $numero_habitacion";
+
+			if ($conn->query($sql_delete_reservas) === TRUE) {
+				// Eliminar cliente después de eliminar las reservas
+				echo "Cliente eliminado y reservas canceladas";
+			} else {echo "Error al cancelar reservas: " . $conn->error;}
         }
         $conn->close();  
         ?>

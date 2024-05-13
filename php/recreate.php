@@ -99,7 +99,7 @@ CREATE TABLE ReservaHabitacion (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	rut_cliente INT UNSIGNED NOT NULL,
 	numero_habitacion INT UNSIGNED NOT NULL,
-	FOREIGN KEY (rut_cliente) REFERENCES Cliente(rut),
+	FOREIGN KEY (rut_cliente) REFERENCES Cliente(rut) ON DELETE CASCADE,
 	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
 	fecha_checkin DATE NOT NULL,
 	fecha_checkout DATE NOT NULL,
