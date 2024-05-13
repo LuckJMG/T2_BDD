@@ -103,7 +103,6 @@ CREATE TABLE ReservaHabitacion (
 	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
 	fecha_checkin DATE NOT NULL,
 	fecha_checkout DATE NOT NULL,
-	calificacion TINYINT
 )
 ";
 createTable($conn, $tabla_reservas_habitaciones, "ReservaHabitacion");
@@ -118,6 +117,17 @@ CREATE TABLE ReservaTour (
 )
 ";
 createTable($conn, $tabla_reservas_tours, "ReservaTour");
+
+$tabla_calificaciones = "
+CREATE TABLE Calificacion (
+	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	numero_habitacion INT UNSIGNED NOT NULL,
+	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
+	calificacion TINYINT NOT NULL
+)
+";
+createTable($conn, $tabla_calificaciones, "Calificacion");
+
 
 $conn->close();
 ?>
