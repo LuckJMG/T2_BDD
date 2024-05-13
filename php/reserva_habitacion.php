@@ -4,6 +4,7 @@
         <title>Reserva de Habitaciones</title>
     </head>
     <body>
+		<a href='/'>Home</a>
         
         <div class="busqueda">
             <div><h1>Disponibilidad</h1></div>

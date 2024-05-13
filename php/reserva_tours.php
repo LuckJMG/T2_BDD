@@ -3,6 +3,8 @@
 	<title>Reserva de Tours</title>
 </head>
 <body>
+	<a href="/">Home</a>
+
 	<h1>Tours</h1>
 	<h2>Reservar Tour</h2>
 	<form action="reserva_tours.php" method="post">
