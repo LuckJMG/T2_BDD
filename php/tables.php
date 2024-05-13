@@ -79,30 +79,29 @@ CREATE TABLE Tour (
 )
 ";
 createTable($conn, $tabla_tours, "Tour");
-function createTour($conn, $lugar, $fecha, $transporte, $valor) {
+function addTour($conn, $id, $fecha, $lugar, $transporte, $valor) {
 	$query = "
-	INSERT INTO Tour (lugar, fecha, transporte, valor)
-	VALUES ('$lugar', '$fecha', '$transporte', $valor);
+	INSERT INTO Habitacion (id, fecha, lugar, transporte, valor)
+	VALUES ($id, '$fecha', '$lugar', '$transporte', $valor)
 	";
-
 	$conn->query($query);
 }
-
-createTour($conn, "Puerto Montt", "1990-08-13", "Caballo", 2);
-createTour($conn, "Puerto Varas", "3000-01-18", "Nave Espacial", 200000);
-createTour($conn, "Frutillar", "2024-02-20", "Frutimovil", 10000);
-createTour($conn, "Hornopiren", "2025-10-30", "Canoa", 40000);
-createTour($conn, "Antartica", "2030-12-24", "Trineo", 696969);
+addTour($conn, 1, '2024-06-01', 'Llanquihue', 'Bus', 20000);
+addTour($conn, 2, '2024-07-02', 'Frutillar', 'Canoa', 10);
+addTour($conn, 3, '2024-08-03', 'Puerto Varas', 'Nave Espacial', 999999);
+addTour($conn, 4, '1990-01-20', 'Puerto Montt', 'Carreta a Caballo', 200);
+addTour($conn, 5, '3000-12-24', 'Antartica', 'Trineo', 800000);
 
 $tabla_reservas_habitaciones = "
 CREATE TABLE ReservaHabitacion (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	rut_cliente INT UNSIGNED NOT NULL,
 	numero_habitacion INT UNSIGNED NOT NULL,
-	FOREIGN KEY (rut_cliente) REFERENCES Cliente(rut) ON DELETE CASCADE,
+	FOREIGN KEY (rut_cliente) REFERENCES Cliente(rut),
 	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
 	fecha_checkin DATE NOT NULL,
-	fecha_checkout DATE NOT NULL
+	fecha_checkout DATE NOT NULL,
+	calificacion TINYINT
 )
 ";
 createTable($conn, $tabla_reservas_habitaciones, "ReservaHabitacion");
@@ -117,17 +116,6 @@ CREATE TABLE ReservaTour (
 )
 ";
 createTable($conn, $tabla_reservas_tours, "ReservaTour");
-
-$tabla_calificaciones = "
-CREATE TABLE Calificacion (
-	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	numero_habitacion INT UNSIGNED NOT NULL,
-	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
-	fecha_checkout DATE NOT NULL,
-	calificacion TINYINT NOT NULL
-)
-";
-createTable($conn, $tabla_calificaciones, "Calificacion");
 
 $conn->close();
 ?>
