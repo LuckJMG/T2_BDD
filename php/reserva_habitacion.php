@@ -81,9 +81,10 @@
             
             <p>Datos reserva:<p>
             <form action="reserva_habitacion.php" method="POST">
-                Numero de Habitacion: <input type="number" name="nombre"><br>
-                fecha_ingreso: <input type="date" name="fecha de entrada"><br>
-                fecha_salida: <input type="date" name="fecha de salida"><br>
+                RUT del Cliente: <input type="text" name="rut_cliente1"><br>
+                Numero de Habitacion: <input type="number" name="numero_habitacion2"><br>
+                Fecha de Ingreso: <input type="date" name="fecha_de_entrada1"><br>
+                Fecha de Salida: <input type="date" name="fecha_de_salida1"><br>
                 <input type="submit">
             </form>
         </div>
@@ -91,20 +92,34 @@
 
         $conn = coneccion();
         
-        if(isset($_POST["numero_habitacion"]) && isset($_POST["fecha_de_entrada"]) && isset($_POST["fecha_de_salida"])){
-            $numero_habitacion = $_POST["numero_habitacion"];
-            $fecha_ingreso = $_POST["fecha_de_entrada"];
-            $fecha_salida = $_POST["fecha_de_salida"];
-            $sql = "UPDATE ReservaHabitacion SET fecha_checkin = '$fecha_ingreso', fecha_checkout = '$fecha_salida' WHERE numero_habitacion = $numero_habitacion";
-            if ($conn->query($sql) === TRUE) {
-                echo "Reserva modificada";
-            } else {
-                echo "Error: " . $sql . "<br>" . $conn->error;
+        if(isset($_POST["rut_cliente1"]) && isset($_POST["numero_habitacion2"]) && isset($_POST["fecha_de_entrada1"]) && isset($_POST["fecha_de_salida1"])){
+            $rut_cliente = $_POST["rut_cliente1"];
+            $numero_habitacion = $_POST["numero_habitacion2"];
+            $fecha_ingreso = $_POST["fecha_de_entrada1"];
+            $fecha_salida = $_POST["fecha_de_salida1"];
+            $sql1 = "SELECT * FROM ReservaHabitacion WHERE rut_cliente = $rut_cliente";
+            $result = $conn->query($sql1);
+            if ($result->num_rows > 0) {
+                // output data of each row
+                $row = $result->fetch_assoc();
+                $numero_habitacion_reservada = $row["numero_habitacion"];
+                if ($numero_habitacion_reservada == $numero_habitacion) {
+                    $sql = "UPDATE ReservaHabitacion SET fecha_checkin = '$fecha_ingreso', fecha_checkout = '$fecha_salida' WHERE rut_cliente = $rut_cliente";
+                    if ($conn->query($sql) === TRUE) {
+                    echo "Reserva modificada";
+                    } else {echo "Error: " . $sql . "<br>" . $conn->error;}
+                }else{
+                    $sql_delete_reservas = "DELETE FROM ReservaHabitacion WHERE rut_cliente = $rut_cliente";
+                    if ($conn->query($sql_delete_reservas) === TRUE) {
+                        $sql2 = "INSERT INTO ReservaHabitacion (rut_cliente, numero_habitacion, fecha_checkin, fecha_checkout) VALUES ($rut_cliente, $numero_habitacion, '$fecha_ingreso', '$fecha_salida')";
+                        if ($conn->query($sql2) === TRUE) {
+                            echo "Reserva modificada";
+                        } else {echo "Error: " . $sql2 . "<br>" . $conn->error;}
+                    }
+                }
             }
         }
-        else {
-            echo "Error: Datos incompletos";
-        }
+        $conn->close();
         ?>
 
         <div class="cancelacionreservas">
@@ -142,5 +157,26 @@
                 } else {echo "Error al cancelar reservas: " . $conn->error;}
             }
         }
+        $conn->close();  
+        ?>
+
+        <?php
+        $sql = "SELECT * FROM ReservaHabitacion";
+        $conn = coneccion();
+        // Ejecutar la consulta
+        $result = $conn->query($sql);
+        
+        // Verificar si hay resultados y mostrarlos
+        if ($result->num_rows > 0) {
+            // Imprimir los datos de cada fila
+            while($row = $result->fetch_assoc()) {
+                echo "ID: " . $row["id"] . "<br>";
+                echo "RUT Cliente: " . $row["rut_cliente"] . "<br>";
+                echo "Número de Habitación: " . $row["numero_habitacion"] . "<br>";
+                echo "Fecha Check-in: " . $row["fecha_checkin"] . "<br>";
+                echo "Fecha Check-out: " . $row["fecha_checkout"] . "<br>";
+                echo "Calificación: " . $row["calificacion"] . "<br>";
+                echo "<hr>"; // Línea horizontal para separar las entradas
+            }}
         $conn->close();  
         ?>
