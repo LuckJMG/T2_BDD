@@ -14,4 +14,20 @@ function coneccion(){
 
     return $conn;
 }
+
+function checkDisponibilidad($conn, $table, $column, $id) {
+	$query = "
+	SELECT $column FROM $table
+	WHERE $column=$id;
+	";
+
+	$result = $conn->query($query);
+	
+	if ($result->num_rows == 0) {
+		echo "<p>$column $id no se encuentra en $table</p>";
+		return False;
+	}
+
+	return True;
+}
 ?>
