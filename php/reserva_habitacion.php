@@ -12,6 +12,7 @@
                 <input type="submit">
             </form>
         </div>
+        
         <?php
         require 'funciones.php';
 
@@ -49,36 +50,6 @@
 
         $conn = coneccion();
 
-
-        // Consulta SQL para obtener la tabla de clientes
-        $sql = "SELECT * FROM Cliente";
-        $result = $conn->query($sql);
-
-        // Imprimir la tabla de clientes si hay resultados
-        if ($result->num_rows > 0) {
-            echo "<table border='1'>
-                    <tr>
-                        <th>RUT</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                    </tr>";
-            // Imprimir datos de cada fila
-            while($row = $result->fetch_assoc()) {
-                echo "<tr>
-                        <td>" . $row["rut"] . "</td>
-                        <td>" . $row["nombre"] . "</td>
-                        <td>" . $row["apellido"] . "</td>
-                    </tr>";
-            }
-            echo "</table>";
-        } else {
-            echo "0 resultados";
-        }
-
-
-
-
-        
         if(isset($_POST["nombre"]) && isset($_POST["apellido"]) && isset($_POST["RUT"]) && isset($_POST["numero_habitacion"]) && isset($_POST["fecha_de_entrada"]) && isset($_POST["fecha_de_salida"])){
             $nombre = $_POST["nombre"];
             $apellido = $_POST["apellido"];
@@ -108,7 +79,7 @@
         <div class="modificacionreservas">
             <div><h1>Modificacion reserva de Habitaciones</h1></div>
             
-            <h2>Datos reserva:</h2>
+            <p>Datos reserva:<p>
             <form action="reserva_habitacion.php" method="POST">
                 Numero de Habitacion: <input type="number" name="nombre"><br>
                 fecha_ingreso: <input type="date" name="fecha de entrada"><br>
@@ -139,45 +110,37 @@
         <div class="cancelacionreservas">
             <div><h1>Cancelacion de reserva de Habitaciones</h1></div>
             
-            <h2>Datos del Cliente:</h2>
+            <p>Eliminar reserva por habitacion:<p>
             <form action="reserva_habitacion.php" method="POST">
                 Numero de Habitacion: <input type="number" name="numero_habitacion1"><br>
                 <input type="submit">
             </form>
-            <?php
+        </div>
 
-            $conn = coneccion();
-
-
-            if(isset($_POST["numero_habitacion1"])){
-                $numero_habitacion = $_POST["numero_habitacion1"];
+        <?php
+        $conn = coneccion();
+        if(isset($_POST["numero_habitacion1"])){
+            $numero_habitacion = $_POST["numero_habitacion1"];
             
+            // Obtener el rut del cliente
+            $sql_rut = "SELECT rut_cliente FROM ReservaHabitacion WHERE numero_habitacion = $numero_habitacion";
+            $result_rut = $conn->query($sql_rut);
+        
+            if ($result_rut->num_rows > 0) {
+                // Obtener el valor del rut del cliente
+                $row_rut = $result_rut->fetch_assoc();
+                $rut_cliente = $row_rut["rut_cliente"];
+        
                 // Eliminar reservas asociadas al cliente
                 $sql_delete_reservas = "DELETE FROM ReservaHabitacion WHERE numero_habitacion = $numero_habitacion";
                 if ($conn->query($sql_delete_reservas) === TRUE) {
                     // Eliminar cliente después de eliminar las reservas
-                    $sql_delete_cliente = "DELETE FROM Cliente WHERE rut = (SELECT rut_cliente FROM ReservaHabitacion WHERE numero_habitacion = $numero_habitacion)";
+                    $sql_delete_cliente = "DELETE FROM Cliente WHERE rut = $rut_cliente";
                     if ($conn->query($sql_delete_cliente) === TRUE) {
                         echo "Cliente eliminado y reservas canceladas";
-                    } else {
-                        echo "Error al eliminar cliente: " . $conn->error;
-                    }
-                } else {
-                    echo "Error al cancelar reservas: " . $conn->error;
-                }
-            } else {
-                echo "Error: Datos incompletos";
+                    } else {echo "Error al eliminar cliente: " . $conn->error;}
+                } else {echo "Error al cancelar reservas: " . $conn->error;}
             }
-            $conn->close();
-            ?>
-        </div>
-<?php
-
-
-#$nombre = $_POST["nombre"];
-#$apellido = $_POST["apellido"];
-#$RUT = $_POST["RUT"];
-#$fecha_ingreso = $_POST["fecha de entrada"];
-#$fecha_salida = $_POST["fecha de salida"];
-
-?>
+        }
+        $conn->close();  
+        ?>
