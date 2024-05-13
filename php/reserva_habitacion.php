@@ -9,29 +9,41 @@
         <div class="busqueda">
             <div><h1>Disponibilidad</h1></div>
             <form action = "reserva_habitacion.php" method="POST">
-                Busqueda: <input type="number" name="Busqueda"><br>
+                <p>Busqueda: <input type="number" name="b_numero" required></p>
+				<p>Fecha CheckIn: <input type="date" name='b_checkin' required></p>
+				<p>Fecha CheckOut: <input type="date" name='b_checkout' required></p>
                 <input type="submit">
             </form>
         </div>
 
-        <?php
-        require 'funciones.php';
+<?php
+require 'funciones.php';
 
-        $conn = coneccion();
+$conn = coneccion();
 
-        if(isset($_POST["Busqueda"])){
-            $busqueda = $_POST["Busqueda"];
-            $sql = "SELECT * FROM ReservaHabitacion WHERE numero_habitacion = $busqueda";
-            $result = $conn->query($sql);
-            if ($result->num_rows > 0) {
-                echo "No Disponible";
-            } 
-            else {
-                echo "Disponible";
-            }
-        }
-        $conn->close();
-        ?>
+if(isset($_POST["b_numero"])){
+	// Obtener datos de formulario
+	$numero = $_POST["b_numero"];
+	$checkin = $_POST["b_checkin"];
+	$checkout = $_POST["b_checkout"];
+
+	// Chequeo de disponibilidad
+	$query = "
+	SELECT * FROM ReservaHabitacion
+	WHERE numero_habitacion = $numero
+	AND ((fecha_checkin BETWEEN '$checkin' AND '$checkout')
+	OR (fecha_checkout BETWEEN '$checkin' AND '$checkout'))
+	";
+	$result = $conn->query($query);
+
+	// Mostrar resultados
+	if ($result->num_rows > 0)
+		echo "<p>Habitación $numero no disponible durante $checkin - $checkout.</p>";
+	else echo "<p>Habitación disponible.</p>";
+}
+
+$conn->close();
+?>
 
         <div class="reservahabitaciones">
             <div><h1>Reserva de Habitaciones</h1></div>
@@ -49,7 +61,6 @@
         </div>
 
 <?php
-
 $conn = coneccion();
 
 if(isset($_POST["RUT"])){
@@ -104,24 +115,36 @@ $conn->close();
 
 $conn = coneccion();
 
-if(isset($_POST["rut_cliente1"])) {
-	$rut_cliente = $_POST["rut_cliente1"];
-	$numero_habitacion = $_POST["numero_habitacion2"];
-	$fecha_ingreso = $_POST["fecha_de_entrada1"];
-	$fecha_salida = $_POST["fecha_de_salida1"];
+if(isset($_POST["modificarId"])) {
+	$id = intval($_POST["modificarId"]);
+	$numero = $_POST["numero_habitacion"];
+	$checkin = $_POST["checkin"];
+	$checkout = $_POST["checkout"];
 
-	$sql1 = "SELECT * FROM ReservaHabitacion WHERE rut_cliente = $rut_cliente";
-	$result = $conn->query($sql1);
+	$query = "
+	SELECT * FROM ReservaHabitacion
+	WHERE numero_habitacion = $numero
+	AND ((fecha_checkin BETWEEN '$checkin' AND '$chekout')
+	OR (fecha_checkout BETWEEN '$checkin' AND '$checkout'))
+	";
 
-	if ($result->num_rows > 0) {
+	if ($conn->query($query)->num_rows == 0) {
+		$sql1 = "SELECT * FROM ReservaHabitacion WHERE id = $id";
+		$result = $conn->query($sql1);
+
 		// output data of each row
 		$row = $result->fetch_assoc();
-		$sql = "UPDATE ReservaHabitacion SET numero_habitacion = $numero_habitacion, fecha_checkin = '$fecha_ingreso', fecha_checkout = '$fecha_salida' WHERE rut_cliente = $rut_cliente";
-		if ($conn->query($sql) === TRUE) {
-		echo "Reserva modificada";
-		} else {echo "Error: " . $sql . "<br>" . $conn->error;}
+		$sql = "
+		UPDATE ReservaHabitacion 
+		SET numero_habitacion=$numero, fecha_checkin='$checkin', fecha_checkout='$checkout' 
+		WHERE id = $id
+		";
+
+		if ($conn->query($sql) === TRUE) 
+			echo "<p>Reserva $id modificada a habitación $numero, $checkin - $checkout.</p>";
+		else echo "Error: " . $sql . "<br>" . $conn->error;
 	}
-	else echo "<p>Cliente $RUT no encontrado.</p>";
+	else echo "<p>Habitación reservada durante $checkin - $checkout.</p>";
 }
 
 $conn->close();
@@ -184,9 +207,10 @@ if ($result->num_rows > 0) {
 			<button name='eliminar' value='$id' type='submit'>Eliminar</button>
 		</form>
 		<form action='reserva_habitacion.php' method='POST' id='modificar$id' style='display: none'>
-			<p>Habitación: <input type=number name='numero_habitacion$id'/></p>
-			<p>Fecha checkin: <input type=date name='checkin$id'/></p>
-			<p>Fecha checkout: <input type=date name='checkout$id'/></p>
+			<p>Habitación: <input type=number name='numero_habitacion'/></p>
+			<p>Fecha checkin: <input type=date name='checkin'/></p>
+			<p>Fecha checkout: <input type=date name='checkout'/></p>
+			<button value='$id' name='modificarId' type='submit'>Submit</button>
 		</form>
 		</li>
 		";
