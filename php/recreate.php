@@ -79,6 +79,20 @@ CREATE TABLE Tour (
 )
 ";
 createTable($conn, $tabla_tours, "Tour");
+function createTour($conn, $lugar, $fecha, $transporte, $valor) {
+	$query = "
+	INSERT INTO Tour (lugar, fecha, transporte, valor)
+	VALUES ('$lugar', '$fecha', '$transporte', $valor);
+	";
+
+	$conn->query($query);
+}
+
+createTour($conn, "Puerto Montt", "1990-08-13", "Caballo", 2);
+createTour($conn, "Puerto Varas", "3000-01-18", "Nave Espacial", 200000);
+createTour($conn, "Frutillar", "2024-02-20", "Frutimovil", 10000);
+createTour($conn, "Hornopiren", "2025-10-30", "Canoa", 40000);
+createTour($conn, "Antartica", "2030-12-24", "Trineo", 696969);
 
 $tabla_reservas_habitaciones = "
 CREATE TABLE ReservaHabitacion (
