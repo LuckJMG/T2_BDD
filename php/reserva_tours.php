@@ -81,7 +81,7 @@ if ($result->num_rows > 0) {
 		$id = $row["id"];
 		$query = "
 		SELECT * FROM ReservaHabitacion
-		WHERE id=(
+		WHERE id IN (
 			SELECT id_reserva_habitacion FROM ReservaTour
 			WHERE id_tour=$id
 		);

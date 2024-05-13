@@ -102,7 +102,8 @@ CREATE TABLE ReservaHabitacion (
 	FOREIGN KEY (rut_cliente) REFERENCES Cliente(rut) ON DELETE CASCADE,
 	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
 	fecha_checkin DATE NOT NULL,
-	fecha_checkout DATE NOT NULL
+	fecha_checkout DATE NOT NULL,
+	valor_total INT
 )
 ";
 createTable($conn, $tabla_reservas_habitaciones, "ReservaHabitacion");
@@ -128,6 +129,84 @@ CREATE TABLE Calificacion (
 )
 ";
 createTable($conn, $tabla_calificaciones, "Calificacion");
+
+$view_calificaciones = "
+CREATE VIEW CalificacionHabitacion AS
+SELECT Habitacion.numero, Habitacion.tipo, Calificacion.fecha_checkout, Calificacion.calificacion
+FROM Calificacion
+INNER JOIN Habitacion
+ON Calificacion.numero_habitacion=Habitacion.numero
+ORDER BY Habitacion.numero ASC;
+";
+createTable($conn, $view_calificaciones, "View Calificaciones");
+
+$function_tour = "
+CREATE FUNCTION RecaudacionHabitacionTour (p_habitacion INT, p_id_tour INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	DECLARE valor_tour INT;
+    DECLARE cantidad_inscripciones INT;
+    
+    SELECT valor INTO valor_tour 
+    FROM Tour
+    WHERE id = p_id_tour;
+    
+    SELECT COUNT(*) INTO cantidad_inscripciones
+    FROM ReservaTour
+	INNER JOIN ReservaHabitacion
+	ON ReservaTour.id_reserva_habitacion = ReservaHabitacion.id
+    WHERE id_tour = p_id_tour
+    AND numero_habitacion = p_habitacion;
+
+	RETURN valor_tour * cantidad_inscripciones;
+END
+";
+createTable($conn, $function_tour, "Function Recaudacion");
+
+$procedure_checkout = "
+CREATE PROCEDURE calcular_valor (IN id_reserva INT)
+BEGIN
+	DECLARE habitacion INT;
+	DECLARE tipo_habitacion VARCHAR(30);
+	DECLARE valor_habitacion INT;
+	DECLARE cantidad_dias INT;
+	DECLARE total_tours INT;
+
+	SELECT numero_habitacion INTO habitacion
+	FROM ReservaHabitacion
+	INNER JOIN Habitacion
+	ON ReservaHabitacion.numero_habitacion = Habitacion.numero
+	WHERE ReservaHabitacion.id = id_reserva;
+
+	SELECT tipo INTO tipo_habitacion
+	FROM Habitacion
+	WHERE numero=habitacion;
+
+	IF tipo_habitacion = 'King' THEN
+		SET valor_habitacion = 40000;
+	ELSEIF tipo_habitacion = 'Double' THEN
+		SET valor_habitacion = 20000;
+	ELSE
+		SET valor_habitacion = 10000;
+	END IF;
+
+	SELECT DATEDIFF(fecha_checkin, fecha_checkout) INTO cantidad_dias
+	FROM ReservaHabitacion
+	WHERE id=id_reserva;
+
+	SELECT SUM(valor) INTO total_tours
+	FROM ReservaTour
+	INNER JOIN Tour
+	ON ReservaTour.id_tour=Tour.id
+	WHERE id_reserva_habitacion=id_reserva;
+
+	UPDATE ReservaHabitacion
+	SET valor_total = valor_habitacion + cantidad_dias * 1000 + total_tours
+	WHERE id = id_reserva;
+END;
+";
+createTable($conn, $procedure_checkout, "Checkout Procedure");
 
 $conn->close();
 ?>
