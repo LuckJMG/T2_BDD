@@ -102,7 +102,7 @@ CREATE TABLE ReservaHabitacion (
 	FOREIGN KEY (rut_cliente) REFERENCES Cliente(rut) ON DELETE CASCADE,
 	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
 	fecha_checkin DATE NOT NULL,
-	fecha_checkout DATE NOT NULL,
+	fecha_checkout DATE NOT NULL
 )
 ";
 createTable($conn, $tabla_reservas_habitaciones, "ReservaHabitacion");
