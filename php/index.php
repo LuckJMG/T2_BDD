@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully";
 
-echo $conn->query("SHOW DATABASES;")
+$conn->close();
 ?>
     </body>
 </html>
