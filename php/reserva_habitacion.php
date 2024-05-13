@@ -70,9 +70,6 @@
                 echo "Error: " . $sql2 . "<br>" . $conn->error;
             }
         }
-        else {
-            echo "Error: Datos incompletos";
-        }
         $conn->close();
         ?>
 
