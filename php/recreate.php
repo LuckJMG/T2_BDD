@@ -103,6 +103,7 @@ CREATE TABLE ReservaHabitacion (
 	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
 	fecha_checkin DATE NOT NULL,
 	fecha_checkout DATE NOT NULL,
+	calificacion TINYINT,
 	valor_total INT
 )
 ";
@@ -218,6 +219,16 @@ BEGIN
 END;
 ";
 createTable($conn, $procedure_checkout, "Checkout Procedure");
+
+$trigger_delete_reserva = "
+CREATE TRIGGER delete_reserva
+BEFORE DELETE
+ON ReservaHabitacion FOR EACH ROW
+BEGIN
+	INSERT INTO Calificacion (numero_habitacion, fecha_checkout, calificacion)
+	VALUES (OLD.numero_habitacion, OLD.fecha_checkout, OLD.calificacion)
+END
+";
 
 $conn->close();
 ?>
