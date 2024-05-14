@@ -40,3 +40,7 @@ mysqldump -u root -p Tarea2 > ./bd/Tarea2.sql
 ```
 
 De forma alternativa, con el siguiente link `localhost:8000/php/recreate.php`, puede crear la base de datos de 0, pero solo estarán los datos de las habitaciones y de los tours, los otros datos se tendrían que poner manualmente.
+
+### Aclaraciones
+- El index.html necesita estar fuera de la carpera php para ser un punto de entrada a la pagina.
+- Se asumen inputs correctos.
