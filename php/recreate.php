@@ -126,7 +126,7 @@ CREATE TABLE Calificacion (
 	numero_habitacion INT UNSIGNED NOT NULL,
 	FOREIGN KEY (numero_habitacion) REFERENCES Habitacion(numero),
 	fecha_checkout DATE NOT NULL,
-	calificacion TINYINT NOT NULL
+	calificacion TINYINT
 )
 ";
 createTable($conn, $tabla_calificaciones, "Calificacion");

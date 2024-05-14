@@ -67,7 +67,7 @@ $result = $conn->query("SELECT * FROM Tour;");
 if ($result->num_rows > 0) {
 	while ($row = $result->fetch_assoc()) {
 		echo "<h3>" . $row["id"] . " - " . $row["lugar"] . "</h3>";
-		echo "<img src='/images/" . $row["lugar"] . ".jpg'>";
+		echo "<img src='/images/" . $row["lugar"] . ".jpg' height='200px'>";
 		echo "<p><b>Fecha: </b>" . $row["fecha"] . "</p>";
 		echo "<p><b>Transporte: </b>" . $row["transporte"] . "</p>";
 		echo "<p><b>Valor: </b>" . $row["valor"] . "</p>";

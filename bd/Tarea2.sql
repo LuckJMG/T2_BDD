@@ -26,7 +26,7 @@ CREATE TABLE `Calificacion` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `numero_habitacion` int unsigned NOT NULL,
   `fecha_checkout` date NOT NULL,
-  `calificacion` tinyint NOT NULL,
+  `calificacion` tinyint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `numero_habitacion` (`numero_habitacion`),
   CONSTRAINT `Calificacion_ibfk_1` FOREIGN KEY (`numero_habitacion`) REFERENCES `Habitacion` (`numero`)
@@ -79,7 +79,7 @@ CREATE TABLE `Cliente` (
 
 LOCK TABLES `Cliente` WRITE;
 /*!40000 ALTER TABLE `Cliente` DISABLE KEYS */;
-INSERT INTO `Cliente` VALUES (1,'1','1'),(11020918,'Andres','Aguila'),(11111111,'Base','Datos'),(12341234,'Lucas','Mosquera'),(13134500,'Harvey','Baird'),(13180281,'Joaquin','Dominguez'),(14091554,'Alexis','Mellis'),(16390401,'Zimba','Scar'),(16514892,'Arkan','Nakra'),(16545744,'Otis','Gaete'),(20800974,'Puchito','Puchito'),(21465108,'Martin','Aseg'),(27514117,'Chester','Prit'),(28040463,'Jorge','Aceval'),(28758718,'Milo','Mosquera'),(28772172,'Lucas','Mosquera');
+INSERT INTO `Cliente` VALUES (1,'1','1'),(2,'2','2'),(4,'4','4'),(11020918,'Andres','Aguila'),(11111111,'Base','Datos'),(12341234,'Lucas','Mosquera'),(13134500,'Harvey','Baird'),(13180281,'Joaquin','Dominguez'),(14091554,'Alexis','Mellis'),(16390401,'Zimba','Scar'),(16514892,'Arkan','Nakra'),(16545744,'Otis','Gaete'),(20800974,'Puchito','Puchito'),(21465108,'Martin','Aseg'),(27514117,'Chester','Prit'),(28040463,'Jorge','Aceval'),(28758718,'Milo','Mosquera'),(28772172,'Lucas','Mosquera');
 /*!40000 ALTER TABLE `Cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +127,7 @@ CREATE TABLE `ReservaHabitacion` (
   KEY `numero_habitacion` (`numero_habitacion`),
   CONSTRAINT `ReservaHabitacion_ibfk_1` FOREIGN KEY (`rut_cliente`) REFERENCES `Cliente` (`rut`) ON DELETE CASCADE,
   CONSTRAINT `ReservaHabitacion_ibfk_2` FOREIGN KEY (`numero_habitacion`) REFERENCES `Habitacion` (`numero`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `ReservaHabitacion` (
 
 LOCK TABLES `ReservaHabitacion` WRITE;
 /*!40000 ALTER TABLE `ReservaHabitacion` DISABLE KEYS */;
-INSERT INTO `ReservaHabitacion` VALUES (2,13134500,1,'2024-05-13','2024-05-19',NULL,NULL),(3,27514117,1,'2024-05-21','2024-05-23',NULL,NULL),(4,11020918,2,'2024-05-16','2024-05-29',NULL,53000),(5,14091554,3,'2024-05-22','2024-05-31',NULL,NULL),(6,13180281,10,'2024-05-17','2024-05-24',NULL,NULL),(7,28772172,13,'2024-05-22','2024-05-31',NULL,NULL),(8,20800974,69,'2024-06-04','2024-06-21',NULL,NULL),(9,28040463,100,'2024-05-21','2024-05-30',NULL,NULL),(10,16514892,69,'2024-05-16','2024-05-26',NULL,NULL),(11,28758718,12,'2024-05-16','2024-05-31',NULL,NULL),(12,16545744,85,'2024-05-16','2024-05-23',NULL,NULL),(13,16545744,57,'2024-05-14','2024-05-16',NULL,NULL),(14,16390401,24,'2024-05-25','2024-05-30',NULL,NULL),(16,21465108,5,'2024-05-15','2024-05-31',NULL,NULL);
+INSERT INTO `ReservaHabitacion` VALUES (2,13134500,1,'2024-05-13','2024-05-19',NULL,NULL),(3,27514117,1,'2024-05-21','2024-05-23',NULL,NULL),(4,11020918,2,'2024-05-16','2024-05-29',NULL,53000),(5,14091554,3,'2024-05-22','2024-05-31',NULL,NULL),(6,13180281,10,'2024-05-17','2024-05-24',NULL,NULL),(7,28772172,13,'2024-05-22','2024-05-31',NULL,NULL),(8,20800974,69,'2024-06-04','2024-06-21',NULL,NULL),(9,28040463,100,'2024-05-21','2024-05-30',NULL,NULL),(10,16514892,69,'2024-05-16','2024-05-26',NULL,NULL),(11,28758718,12,'2024-05-16','2024-05-31',NULL,NULL),(12,16545744,85,'2024-05-16','2024-05-23',NULL,NULL),(13,16545744,57,'2024-05-14','2024-05-16',NULL,NULL),(14,16390401,24,'2024-05-25','2024-05-30',NULL,NULL),(16,21465108,5,'2024-05-15','2024-05-31',NULL,NULL),(18,1,90,'2024-05-13','2024-05-14',NULL,NULL),(19,2,54,'2024-05-13','2024-05-14',NULL,NULL),(20,4,4,'2024-05-24','2024-05-30',NULL,NULL);
 /*!40000 ALTER TABLE `ReservaHabitacion` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -174,7 +174,7 @@ CREATE TABLE `ReservaTour` (
   KEY `id_tour` (`id_tour`),
   CONSTRAINT `ReservaTour_ibfk_1` FOREIGN KEY (`id_reserva_habitacion`) REFERENCES `ReservaHabitacion` (`id`),
   CONSTRAINT `ReservaTour_ibfk_2` FOREIGN KEY (`id_tour`) REFERENCES `Tour` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +183,7 @@ CREATE TABLE `ReservaTour` (
 
 LOCK TABLES `ReservaTour` WRITE;
 /*!40000 ALTER TABLE `ReservaTour` DISABLE KEYS */;
-INSERT INTO `ReservaTour` VALUES (1,2,1),(2,3,1),(3,5,3),(4,7,4),(5,8,5),(6,12,5),(7,10,1),(8,14,1);
+INSERT INTO `ReservaTour` VALUES (1,2,1),(2,3,1),(3,5,3),(4,7,4),(5,8,5),(6,12,5),(7,10,1),(8,14,1),(9,2,5);
 /*!40000 ALTER TABLE `ReservaTour` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,4 +241,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-13 21:33:18
+-- Dump completed on 2024-05-13 22:15:44
