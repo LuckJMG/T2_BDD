@@ -16,7 +16,7 @@ require 'funciones.php';
 $conn = coneccion();
 
 for ($i = 1; $i <= 100; $i++) {
-	$result = $conn->query("SELECT * FROM CalificacionHabitacion WHERE numero=$i;");
+	$result = $conn->query("SELECT * FROM CalificacionHabitacion WHERE numero=$i AND calificacion IS NOT NULL;");
 	$tours = $conn->query("SELECT * FROM Tour");
 
 	if ($result->num_rows > 0) {
