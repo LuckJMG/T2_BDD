@@ -168,10 +168,11 @@ $procedure_checkout = "
 CREATE PROCEDURE calcular_valor (IN id_reserva INT)
 BEGIN
 	DECLARE habitacion INT;
-	DECLARE tipo_habitacion VARCHAR(30);
-	DECLARE valor_habitacion INT;
-	DECLARE cantidad_dias INT;
-	DECLARE total_tours INT;
+	DECLARE tipo_habitacion VARCHAR(30) DEFAULT 'Single';
+	DECLARE valor_habitacion INT DEFAULT 10000;
+	DECLARE cantidad_dias INT DEFAULT 0;
+	DECLARE total_tours INT DEFAULT 0;
+	DECLARE total INT DEFAULT 0;
 
 	SELECT numero_habitacion INTO habitacion
 	FROM ReservaHabitacion
@@ -191,9 +192,13 @@ BEGIN
 		SET valor_habitacion = 10000;
 	END IF;
 
-	SELECT DATEDIFF(fecha_checkin, fecha_checkout) INTO cantidad_dias
+	SELECT DATEDIFF(fecha_checkout, fecha_checkin) INTO cantidad_dias
 	FROM ReservaHabitacion
 	WHERE id=id_reserva;
+
+	IF cantidad_dias < 0 THEN
+		SET cantidad_dias = 0;
+	END IF;
 
 	SELECT SUM(valor) INTO total_tours
 	FROM ReservaTour
@@ -201,8 +206,14 @@ BEGIN
 	ON ReservaTour.id_tour=Tour.id
 	WHERE id_reserva_habitacion=id_reserva;
 
+	IF total_tours IS NULL THEN
+		SET total_tours = 0;
+	END IF;
+	
+	SET total = valor_habitacion + cantidad_dias * 1000 + total_tours;
+
 	UPDATE ReservaHabitacion
-	SET valor_total = valor_habitacion + cantidad_dias * 1000 + total_tours
+	SET valor_total = total
 	WHERE id = id_reserva;
 END;
 ";
