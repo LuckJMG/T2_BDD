@@ -79,7 +79,6 @@ $conn->close();
                         <th>Fecha de Salida</th>
                         <th>Total<th>
                         <th>Calificacion<th>
-                        <th>CheckOut<th>
                     </tr>
                     <tr>
                         <td>$reserva_id</td>
@@ -90,13 +89,30 @@ $conn->close();
                         <td><form action = 'checkout.php' method='POST'>
                                 Calificacion: <input type='number' name='calificacion' min='1' max='5' required><br>
                                 <input type='hidden' name='reserva_id' value='$reserva_id'>
-                                <input type='submit' value = 'Seleccionar'>
+                                <input type='submit' value = 'Terminar CheckOut'>
                             </form>
                         </td>
                     <tr>
                     
                 <table>";
                     
+    }
+
+    $conn->close();
+?>
+
+
+<?php 
+    $conn = coneccion();
+
+    if(isset($_POST['calificacion'])){
+        $reserva_id = $_POST['reserva_id'];
+        $calificacion = $_POST['calificacion'];
+        $sql = "UPDATE ReservaHabitacion SET calificacion = $calificacion WHERE id = $reserva_id";
+        $result = $conn->query($sql);
+        $sql1 = "DELETE FROM ReservaHabitacion WHERE id = $reserva_id";
+        $result1 = $conn->query($sql1);
+        echo "<h2>CheckOut terminado</h2>";
     }
 
     $conn->close();
