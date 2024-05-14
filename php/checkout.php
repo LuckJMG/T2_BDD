@@ -87,6 +87,12 @@
                         <td>$fecha_checkin</td>
                         <td>$fecha_checkout</td>
                         <td>$total</td>
+                        <td><form action = 'checkout.php' method='POST'>
+                                Calificacion: <input type='number' name='calificacion' min='1' max='5' required><br>
+                                <input type='hidden' name='reserva_id' value='$reserva_id'>
+                                <input type='submit' value = 'Seleccionar'>
+                            </form>
+                        </td>
                     <tr>
                     
                 <table>";
