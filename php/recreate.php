@@ -226,9 +226,10 @@ BEFORE DELETE
 ON ReservaHabitacion FOR EACH ROW
 BEGIN
 	INSERT INTO Calificacion (numero_habitacion, fecha_checkout, calificacion)
-	VALUES (OLD.numero_habitacion, OLD.fecha_checkout, OLD.calificacion)
+	VALUES (OLD.numero_habitacion, OLD.fecha_checkout, OLD.calificacion);
 END
 ";
+createTable($conn, $trigger_delete_reserva, "Trigger");
 
 $conn->close();
 ?>
