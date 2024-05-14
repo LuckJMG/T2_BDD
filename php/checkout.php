@@ -3,20 +3,26 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-	<title>Checkout</title>
+	<link rel="stylesheet" href="../styles.css">
+    <title>Checkout</title>
 </head>
 <body>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 	<a href="/">Home</a>
 
-<h1>Checkout</h1>
-
-<form action="checkout.php" method="post">
-    Número de habitación: <input type="number" name="habitacion" required><br>
-    <input type="submit"> 
-
-    
-</form>
+<div class="cuadrado2">
+    <div class="card">
+        <h3 class="card-header">CheckOut</h3>
+      <div class="card-body">
+        <form action="checkout.php" method="post">
+          <div class="mb-3">
+            <label for="habitacion" class="form-label">Número de habitación</label>
+            <input type="number" class="form-control" id="habitacion" name="habitacion" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Buscar</button>
+        </form>
+    </div>
+</div>
 <?php
 require 'funciones.php';
 
@@ -31,27 +37,34 @@ if(isset($_POST['habitacion'])){
 $conn->close();
     if(isset($result) && $result->num_rows > 0): ?>
     <h2>Reservas para la habitación <?php echo $numero_habitacion; ?></h2>
-    <table border="1">
-        <tr>
-            <th>ID Reserva</th>
-            <th>RUT Cliente</th>
-            <th>Fecha de Ingreso</th>
-            <th>Fecha de Salida</th>
-            <th>Fecha CheckOut</th>
-        </tr>
-        <?php while($row = $result->fetch_assoc()): ?>
+    <table class='table table-striped' border="1">
+        <thead>
             <tr>
-                <td><?php echo $row["id"]; ?></td>
+                <th scope='col'>ID Reserva</th>
+                <th scope='col'>RUT Cliente</th>
+                <th scope='col'>Fecha de Ingreso</th>
+                <th scope='col'>Fecha de Salida</th>
+                <th scope='col'>Fecha CheckOut</th>
+            </tr>
+        </thead>
+        <?php while($row = $result->fetch_assoc()): ?>
+        <tbody>  
+            <tr>
+                <td scope='row'><?php echo $row["id"]; ?></td>
                 <td><?php echo $row["rut_cliente"]; ?></td>
                 <td><?php echo $row["fecha_checkin"]; ?></td>
                 <td><?php echo $row["fecha_checkout"]; ?></td>
                 <td><form action = "checkout.php" method="POST">
-                        Fecha de salida: <input type="date" name="fecha_salida" min="<?php echo $row["fecha_checkin"]; ?>" max="<?php echo $row["fecha_checkout"]; ?>" required><br>
-                        <input type="hidden" name="reserva_id" value="<?php echo $row["id"]; ?>">
-                        <input type="submit" value = 'Seleccionar'>
+                        <div class="mb-3">
+                            <label for="fecha_salida" class="form-label">Fecha de Salida</label>
+                            <input type="date" class="form-control" name="fecha_salida" min="<?php echo $row["fecha_checkin"]; ?>" max="<?php echo $row["fecha_checkout"]; ?>" required></p>
+                            <input type="hidden" name="reserva_id" value="<?php echo $row["id"]; ?>">
+                            <button type='submit' class='btn btn-primary'>Seleccionar</button>
+                        </div>
                     </form>
                 </td>
             </tr>
+        </tbody>
         <?php endwhile; ?>
     </table>
 <?php endif; ?>
@@ -75,29 +88,35 @@ $conn->close();
             $total = $row['valor_total'];
         }
         echo "<h2>CheckOut para la habitación con ID $reserva_id</h2>
-                <table border='1'>
-                    <tr>
-                        <th>ID Reserva</th>
-                        <th>RUT Cliente</th>
-                        <th>Fecha de Ingreso</th>
-                        <th>Fecha de Salida</th>
-                        <th>Total</th>
-                        <th>Calificacion</th>
-                    </tr>
-                    <tr>
-                        <td>$reserva_id</td>
-                        <td>$rut_cliente</td>
-                        <td>$fecha_checkin</td>
-                        <td>$fecha_checkout</td>
-                        <td>$total</td>
-                        <td><form action = 'checkout.php' method='POST'>
-                                Calificacion: <input type='number' name='calificacion' min='1' max='5' required><br>
-                                <input type='hidden' name='reserva_id' value='$reserva_id'>
-                                <input type='submit' value = 'Terminar CheckOut'>
-                            </form>
-                        </td>
-                    <tr>
-                    
+                <table class='table table-striped' border='1'>
+                    <thead>
+                        <tr>
+                            <th scope='col'>ID Reserva</th>
+                            <th scope='col'>RUT Cliente</th>
+                            <th scope='col'>Fecha de Ingreso</th>
+                            <th scope='col'>Fecha de Salida</th>
+                            <th scope='col'>Total</th>
+                            <th scope='col'>Calificacion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope='row'>$reserva_id</th>
+                            <td>$rut_cliente</td>
+                            <td>$fecha_checkin</td>
+                            <td>$fecha_checkout</td>
+                            <td>$total</td>
+                            <td><form action = 'checkout.php' method='POST'>
+                                    <div class='mb-3'>
+                                        <label for='calificacion' class='form-label'>Calificacion</label>
+                                        <input type='number' class='form-control' name='calificacion' min='1' max='5' required></p>
+                                        <input type='hidden' name='reserva_id' value='$reserva_id'>
+                                        <button type='submit' class='btn btn-primary'>Terminar CheckOut</button>
+                                    </div>
+                                </form>
+                            </td>
+                        <tr>
+                    </tbody>
                 <table>";
                     
     }
