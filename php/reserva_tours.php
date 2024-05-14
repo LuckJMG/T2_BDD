@@ -26,25 +26,16 @@ if (isset($_POST["id_reserva"])
 	&& checkDisponibilidad($conn, "ReservaHabitacion", "id", $_POST["id_reserva"])
 	&& checkDisponibilidad($conn, "Tour", "id", $_POST["id_tour"])) {
 	$id_reserva = $_POST["id_reserva"];
+	$id_tour = $_POST["id_tour"];
+
 	$query = "
-	SELECT * FROM ReservaTour
-	INNER JOIN ReservaHabitacion
-	ON ReservaTour.id_reserva_habitacion=ReservaHabitacion.id
-	WHERE ReservaHabitacion.id=$id_reserva;
+	INSERT INTO ReservaTour (id_reserva_habitacion, id_tour)
+	VALUES ($id_reserva, $id_tour);
 	";
-	
-	if ($conn->query($query)->num_rows == 0) {
-		$id_tour = $_POST["id_tour"];
 
-		$query = "
-		INSERT INTO ReservaTour (id_reserva_habitacion, id_tour)
-		VALUES ($id_reserva, $id_tour);
-		";
-
-		echo $query;
-		if ($conn->query($query)) echo "Reserva Completada!";
-		else echo "Ha ocurrido un error, contactar a servicio técnico.";
-	}
+	echo $query;
+	if ($conn->query($query)) echo "Reserva Completada!";
+	else echo "Ha ocurrido un error, contactar a servicio técnico.";
 }
 
 $conn->close();
