@@ -4,22 +4,37 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <title>Reserva de Habitaciones</title>
+        <link rel="stylesheet" href="../styles.css">
+		<title>Reserva de Habitaciones</title>
     </head>
     <body>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-		<a href='/'>Home</a>
+        <a href="/">Home</a>
         
-        <div class="busqueda">
-            <div><h1>Disponibilidad</h1></div>
-            <form action = "reserva_habitacion.php" method="POST">
-                <p>Busqueda: <input type="number" name="b_numero" required></p>
-				<p>Fecha CheckIn: <input type="date" name='b_checkin' required></p>
-				<p>Fecha CheckOut: <input type="date" name='b_checkout' required></p>
-                <input type="submit">
-            </form>
-        </div>
-
+        <div class="cuadrado">
+			<div class="card">
+			<h4 class="card-header">Disponibilidad de Habitaciones</h4>
+				<div class="card-body">
+        			<form action = "reserva_habitacion.php" method="POST">
+						<div class="mb-3">
+							<label for="bb_numero" class="form-label">Busqueda</label>
+        			    	<input type="number" class="form-control" name="b_numero" id="bb_numero" aria-describedby="busquedahelp" required></p>
+							<div id="busquedahelp" class="form-text">Numero de habitacion a buscar</div>
+						</div>
+						<div class="mb-3">
+							<label for="b_checkin" class="form-label">Fecha CheckIn</label>
+							<input type="date" class="form-control" name="b_checkin" required></p>
+						</div>
+						<div class="mb-3">
+							<label for="b_checkout" class="form-label">Fecha CheckOut</label>
+							<input type="date" class="form-control" name="b_checkout" required></p>
+						</div>
+        			    <button type="submit" class="btn btn-primary">Buscar</button>
+        			</form>
+				</div>
+			</div>
+		</div>
+        
 <?php
 require 'funciones.php';
 
@@ -48,21 +63,41 @@ if(isset($_POST["b_numero"])){
 
 $conn->close();
 ?>
-
-        <div class="reservahabitaciones">
-            <div><h1>Reserva de Habitaciones</h1></div>
-            
-            <p>Datos del Cliente:<p>
-            <form action="reserva_habitacion.php" method="POST">
-                Nombre: <input type="text" name="nombre" required><br>
-                Apellido: <input type="text" name="apellido" required><br>
-                RUT: <input type="number" name="RUT" required><br>
-                Numero Habitacion: <input type="number" name="numero_habitacion" required><br>
-                fecha_ingreso: <input type="date" name="fecha_de_entrada" required><br>
-                fecha_salida: <input type="date" name="fecha_de_salida" required><br>
-                <input type="submit">
-            </form>
-        </div>
+		<div class="cuadrado">
+        	<div class="card">
+        	    <h4 class="card-header">Reserva de Habitaciones</h4>
+				<div class="card-body">
+        	    	<p>Datos del Cliente<p>
+        	    	<form action="reserva_habitacion.php" method="POST">
+						<div class="mb-3">
+							<label for="nombre" class="form-label">Nombre</label>
+							<input type="text" class="form-control" name="nombre" required></p>
+						</div>
+						<div class="mb-3">
+							<label for="apellido" class="form-label">Apellido</label>
+							<input type="text" class="form-control" name="apellido" required></p>
+						</div>
+						<div class="mb-3">
+							<label for="RUT" class="form-label">RUT</label>
+							<input type="number" class="form-control" name="RUT" required></p>
+						</div>
+						<div class="mb-3">
+							<label for="numero_habitacion" class="form-label">Numero Habitacion</label>
+							<input type="number" class="form-control" name="numero_habitacion" required></p>
+						</div>
+						<div class="mb-3">
+							<label for="fecha_de_entrada" class="form-label">Fecha de Entrada</label>
+							<input type="date" class="form-control" name="fecha_de_entrada" required></p>
+						</div>
+						<div class="mb-3">
+							<label for="fecha_de_salida" class="form-label">Fecha de Salida</label>
+							<input type="date" class="form-control" name="fecha_de_salida" required></p>
+						</div>
+        	    	    <button type="submit" class="btn btn-primary">Reservar Habitacion</button>
+        	    	</form>
+				</div>
+        	</div>
+		</div>
 
 <?php
 $conn = coneccion();
@@ -175,7 +210,7 @@ if(isset($_POST["eliminar"])) {
 $conn->close();  
 ?>
 
-			<hr>
+<hr>
 
 <script>
 function mostrarModificar(id) {
@@ -204,19 +239,47 @@ if ($result->num_rows > 0) {
 		$checkout = $row["fecha_checkout"];
 
 		echo "
-		<li>
-		<p>Reserva $id: Habitación $numero, $checkin - $checkout</p>
-		<button onclick=mostrarModificar($id)>Modificar</button>
-		<form action='reserva_habitacion.php' method='POST'>
-			<button name='eliminar' value='$id' type='submit'>Eliminar</button>
-		</form>
-		<form action='reserva_habitacion.php' method='POST' id='modificar$id' style='display: none'>
-			<p>Habitación: <input type=number name='numero_habitacion'/></p>
-			<p>Fecha checkin: <input type=date name='checkin'/></p>
-			<p>Fecha checkout: <input type=date name='checkout'/></p>
-			<button value='$id' name='modificarId' type='submit'>Submit</button>
-		</form>
-		</li>
+		<table class='table table-striped'>
+			<thead>
+				<tr>
+					<th scope='col'>Reserva</th>
+					<th scope='col'>Habitacion</th>
+					<th scope='col'>CheckIn</th>
+					<th scope='col'>CheckOut</th>
+					<th scope='col'>Acciones</th>
+	  			</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope='row'>$id</th>
+					<td>$numero</td>
+					<td>$checkin</td>
+					<td>$checkout</td>
+					<td>
+						<button class='btn btn-primary' onclick=mostrarModificar($id)>Modificar</button>
+						<p></p>
+						<form action='reserva_habitacion.php' method='POST'>
+							<button name='eliminar' value='$id' type='submit' class='btn btn-primary'>Eliminar</button>
+						</form>
+						<form action='reserva_habitacion.php' method='POST' id='modificar$id' style='display: none'>
+							<div class='mb-3'>
+								<label for='numero_habitacion' class='form-label'>Habitación</label>
+								<input type='number' class='form-control' name='numero_habitacion' required></p>
+							</div>
+							<div class='mb-3'>
+								<label for='checkin' class='form-label'>CheckIn</label>
+								<input type='date' class='form-control' name='checkin' required></p>
+							</div>
+							<div class='mb-3'>
+								<label for='checkout' class='form-label'>CheckOut</label>
+								<input type='date' class='form-control' name='checkout' required></p>
+							</div>
+							
+							<button value='$id' name='modificarId' type='submit' class='btn btn-primary'>Submit</button>
+						</form>
+					</td>
+				</tr>
+		</table>
 		";
 	}
 	echo "</ul>";
