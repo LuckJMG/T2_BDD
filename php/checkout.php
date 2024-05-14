@@ -14,18 +14,17 @@
     
 </form>
 <?php
-    require 'funciones.php';
+require 'funciones.php';
 
-    if(isset($_POST['habitacion'])){
-    
-    $conn = coneccion();
-    $numero_habitacion = $_POST['habitacion'];
+$conn = coneccion();
 
-    $sql = "SELECT * FROM ReservaHabitacion WHERE numero_habitacion = $numero_habitacion";
-    $result = $conn->query($sql);
+if(isset($_POST['habitacion'])){
+	$numero_habitacion = $_POST['habitacion'];
 
-    $conn->close();
+	$sql = "SELECT * FROM ReservaHabitacion WHERE numero_habitacion = $numero_habitacion";
+	$result = $conn->query($sql);
 }
+$conn->close();
     if(isset($result) && $result->num_rows > 0): ?>
     <h2>Reservas para la habitación <?php echo $numero_habitacion; ?></h2>
     <table border="1">
@@ -54,8 +53,9 @@
 <?php endif; ?>
 
 <?php 
+    $conn = coneccion();
+
     if(isset($_POST['fecha_salida'])){
-        $conn = coneccion();
         $reserva_id = $_POST['reserva_id'];
         $fecha_salida = $_POST['fecha_salida'];
         $sql1 = "UPDATE ReservaHabitacion SET fecha_checkout = '$fecha_salida' WHERE id = $reserva_id";
@@ -98,8 +98,8 @@
                 <table>";
                     
     }
-    $conn->close();
 
+    $conn->close();
 ?>
 
 
