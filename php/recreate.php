@@ -6,11 +6,13 @@ $dbname = "Tarea2";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password);
+
 // Check connection
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
+// Borrar y crear la base de datos desde 0
 $sql = "DROP DATABASE Tarea2";
 if ($conn->query($sql) === TRUE) {
   echo "<p>Base de Datos borrada</p>";
@@ -29,11 +31,13 @@ $conn->close();
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
+
 // Check connection
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
+// Ejecutar query
 function createTable($conn, $table, $name) {
 	if ($conn->query($table) === TRUE) {
 	  echo "<p>Table $name created successfully</p>";
@@ -42,7 +46,7 @@ function createTable($conn, $table, $name) {
 	}
 }
 
-// sql to create table
+// Tabla Cliente
 $tabla_clientes = "
 CREATE TABLE Cliente (
 	rut INT UNSIGNED PRIMARY KEY,
@@ -52,6 +56,7 @@ CREATE TABLE Cliente (
 ";
 createTable($conn, $tabla_clientes, "Cliente");
 
+// Tabla Habitacion
 $tabla_habitaciones = "
 CREATE TABLE Habitacion (
 	numero INT UNSIGNED PRIMARY KEY,
@@ -69,6 +74,7 @@ for ($numero = 1; $numero <= 100; $numero++) {
 	$conn->query($query);
 }
 
+// Tabla Tour
 $tabla_tours = "
 CREATE TABLE Tour (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -79,6 +85,7 @@ CREATE TABLE Tour (
 )
 ";
 createTable($conn, $tabla_tours, "Tour");
+
 function createTour($conn, $lugar, $fecha, $transporte, $valor) {
 	$query = "
 	INSERT INTO Tour (lugar, fecha, transporte, valor)
@@ -94,6 +101,7 @@ createTour($conn, "Frutillar", "2024-02-20", "Frutimovil", 10000);
 createTour($conn, "Hornopiren", "2025-10-30", "Canoa", 40000);
 createTour($conn, "Antartica", "2030-12-24", "Trineo", 696969);
 
+// Tabla ReservaHabitacion
 $tabla_reservas_habitaciones = "
 CREATE TABLE ReservaHabitacion (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -109,6 +117,7 @@ CREATE TABLE ReservaHabitacion (
 ";
 createTable($conn, $tabla_reservas_habitaciones, "ReservaHabitacion");
 
+// Tabla ReservaTour
 $tabla_reservas_tours = "
 CREATE TABLE ReservaTour (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -120,6 +129,7 @@ CREATE TABLE ReservaTour (
 ";
 createTable($conn, $tabla_reservas_tours, "ReservaTour");
 
+// Tabla Calificacion
 $tabla_calificaciones = "
 CREATE TABLE Calificacion (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -131,6 +141,7 @@ CREATE TABLE Calificacion (
 ";
 createTable($conn, $tabla_calificaciones, "Calificacion");
 
+// View de Calificaciones y Habitaciones
 $view_calificaciones = "
 CREATE VIEW CalificacionHabitacion AS
 SELECT Habitacion.numero, Habitacion.tipo, Calificacion.fecha_checkout, Calificacion.calificacion
@@ -141,6 +152,7 @@ ORDER BY Habitacion.numero ASC;
 ";
 createTable($conn, $view_calificaciones, "View Calificaciones");
 
+// Funcion para calcular la recaudacion de tours
 $function_tour = "
 CREATE FUNCTION RecaudacionHabitacionTour (p_habitacion INT, p_id_tour INT)
 RETURNS INT
@@ -165,6 +177,7 @@ END
 ";
 createTable($conn, $function_tour, "Function Recaudacion");
 
+// Procedimiento para calcular el valor total al hacer checkout
 $procedure_checkout = "
 CREATE PROCEDURE calcular_valor (IN id_reserva INT)
 BEGIN
@@ -220,6 +233,7 @@ END;
 ";
 createTable($conn, $procedure_checkout, "Checkout Procedure");
 
+// Trigger para guardar la calificacion cuando se hace checkout una reserva
 $trigger_delete_reserva = "
 CREATE TRIGGER delete_reserva
 BEFORE DELETE
