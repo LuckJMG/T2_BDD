@@ -20,3 +20,15 @@ body {
     margin-left: 10vh;
     display: inline-table;
 }
+.cuadrado3{
+    width: 50vh;
+    margin-bottom: 3vh;
+    margin-left: 2.3vh;
+    display: inline-block;
+}
+
+.imagen-tour {
+    height: 200px;
+    width: auto; 
+    object-fit: contain; 
+}
