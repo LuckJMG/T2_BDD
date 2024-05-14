@@ -209,8 +209,18 @@ if(isset($_POST["eliminar"])) {
 
 $conn->close();  
 ?>
-
-<hr>
+<br>
+<br>
+<br>
+<br>
+<figure class="text-center">
+  <blockquote class="blockquote">
+    <h3>Reservas de Habitaciones Realizadas</h3>
+  </blockquote>
+  <figcaption class="blockquote-footer">
+    Al parecer nos ha ido <cite title="Source Title">bien</cite>
+  </figcaption>
+</figure>
 
 <script>
 function mostrarModificar(id) {
