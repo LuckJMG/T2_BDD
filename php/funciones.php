@@ -24,10 +24,7 @@ function checkDisponibilidad($conn, $table, $column, $id) {
 
 	$result = $conn->query($query);
 	
-	if ($result->num_rows == 0) {
-		echo "<p>$column $id no se encuentra en $table</p>";
-		return False;
-	}
+	if ($result->num_rows == 0) return False;
 
 	return True;
 }

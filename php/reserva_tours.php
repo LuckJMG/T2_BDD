@@ -33,7 +33,6 @@ if (isset($_POST["id_reserva"])
 	VALUES ($id_reserva, $id_tour);
 	";
 
-	echo $query;
 	if ($conn->query($query)) echo "Reserva Completada!";
 	else echo "Ha ocurrido un error, contactar a servicio técnico.";
 }
