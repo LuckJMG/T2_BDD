@@ -87,7 +87,7 @@ $conn->close();
 						</div>
 						<div class="mb-3">
 							<label for="fecha_de_entrada" class="form-label">Fecha de Entrada</label>
-							<input type="date" class="form-control" name="fecha_de_entrada" required></p>
+							<input type="date" class="form-control" name="fecha_de_entrada" required></input>
 						</div>
 						<div class="mb-3">
 							<label for="fecha_de_salida" class="form-label">Fecha de Salida</label>
@@ -196,12 +196,17 @@ if(isset($_POST["eliminar"])) {
 	$id = intval($_POST["eliminar"]);
 
 	// Eliminar reserva por ID
+	$query_tours = "
+	DELETE FROM ReservaTour
+	WHERE id_reserva_habitacion=$id
+	";
+
 	$query = "
 	DELETE FROM ReservaHabitacion
 	WHERE id = $id;
 	";
 
-	if ($conn->query($query) === TRUE)
+	if ($conn->query($query_tours) === TRUE && $conn->query($query) === TRUE)
 		echo "<p>Reserva $id eliminada.</p>";
 	else 
 		echo "Error al cancelar reservas: " . $conn->error;

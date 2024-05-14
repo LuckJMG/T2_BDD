@@ -109,7 +109,7 @@ createTable($conn, $tabla_reservas_habitaciones, "ReservaHabitacion");
 $tabla_reservas_tours = "
 CREATE TABLE ReservaTour (
 	id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	id_reserva_habitacion INT UNSIGNED NOT NULL,
+	id_reserva_habitacion INT UNSIGNED,
 	id_tour INT UNSIGNED NOT NULL,
 	FOREIGN KEY (id_reserva_habitacion) REFERENCES ReservaHabitacion(id),
 	FOREIGN KEY (id_tour) REFERENCES Tour(id)
