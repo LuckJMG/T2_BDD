@@ -77,8 +77,8 @@ $conn->close();
                         <th>RUT Cliente</th>
                         <th>Fecha de Ingreso</th>
                         <th>Fecha de Salida</th>
-                        <th>Total<th>
-                        <th>Calificacion<th>
+                        <th>Total</th>
+                        <th>Calificacion</th>
                     </tr>
                     <tr>
                         <td>$reserva_id</td>
